@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>nnR</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">nnR</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(nnR)</span></code></pre></div>
+<p>This package aims to implement a series of operations first described
+in <span class="citation">Grohs et al. (2023)</span>, <span class="citation">Petersen and Voigtlaender (2018)</span>, <span class="citation">Grohs, Jentzen, and Salimova (2022)</span>, <span class="citation">Jentzen, Kuckuck, and Wurstemberger (2023)</span>, and
+a broad extension to that framework of operations as seen in <span class="citation">Rafi, Padgett, and Nakarmi (2024)</span>. Our main
+definitions will be from <span class="citation">Rafi, Padgett, and
+Nakarmi (2024)</span>, but we will also delve deeper into the literature
+when necessary.</p>
+<div id="neural-networks-and-generating-them" class="section level3">
+<h3>Neural Networks and Generating Them</h3>
+<p>Our definition of neural networks will be ordered tuples of ordered
+pairs. A neural network is something like <span class="math inline">\(((W_1,b_1),(W_2,b_2), (W_3,b_3))\)</span>. Where
+each <span class="math inline">\(W_i\)</span> is a weight matrix and
+each <span class="math inline">\(b_i\)</span> is a bias vector. You may
+create neural networks by specifying a list, that will indicate the
+number of neurons in each layer.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>layer_architecture <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">create_nn</span>(layer_architecture)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [[1]]$W</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;             [,1]       [,2]       [,3]       [,4]</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; [1,]  0.85140551  1.0236541 -0.8268231  0.3083593</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; [2,]  1.50691130  0.2038044 -0.2377545 -2.9352571</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [3,] -0.73066553 -0.9679651 -0.1427269 -0.1825402</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; [4,] -0.07630063  1.3203687  0.3892640  0.6214547</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; [5,] -0.73016343 -0.2305575 -0.4691877  0.2473949</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; [[1]]$b</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; [1,]  1.7135053</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; [2,]  0.6213685</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; [3,]  1.0899444</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; [4,]  0.8488450</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; [5,] -0.2936087</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; [[2]]$W</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt;             [,1]        [,2]       [,3]       [,4]       [,5]</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; [1,] -1.87545287  1.64854447 -1.2096510  0.4229130  0.2099359</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; [2,]  0.06281382 -0.02134632  0.6324472  0.3117254 -1.3206046</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; [3,]  0.24629255  1.63019104 -0.3413203  0.4736401 -0.3721702</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; [4,]  0.46896559  0.13932554 -1.6105054  0.8181013  0.6419611</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; [5,] -0.80069104  1.93395324 -0.4264567 -2.4306414 -0.2599279</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; [6,] -1.24317782  0.14920674  0.1831347  0.1094383 -0.8187282</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; [[2]]$b</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; [1,] -0.2112726</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; [2,]  0.4037090</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; [3,]  0.9648242</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; [4,]  2.2083125</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; [5,]  1.1659607</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; [6,]  0.6493405</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; [[3]]$W</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]         [,3]       [,4]        [,5]       [,6]</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; [1,] -0.1653070 -0.5835176 -0.011678293 -0.1931576  0.69920273  0.2858378</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; [2,] -0.7725770 -2.0002639  0.317312830  0.7453666 -0.02718446  2.0467754</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; [3,] -0.8695696  0.1255744 -0.008505474 -0.4816421  0.87495184 -1.3960953</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; [4,]  0.5675979 -1.0791620 -0.259826015 -0.8891931 -1.12603454  0.3489476</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; [5,] -0.3657891 -0.2361163  2.196284752 -0.4710113  0.72754301  0.8477316</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt; [[3]]$b</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt; [1,]  1.0028620</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt; [2,]  0.4516713</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt; [3,]  1.0656108</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt; [4,] -1.1100011</span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt; [5,]  2.2637647</span></span></code></pre></div>
+<p>Note that each weight and bias vector will be populated from a
+standard uniform distribution. Associated with each neural network will
+be a family of functions:</p>
+<ul>
+<li><p><code>dep</code>: showing the depth of a neural network:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">dep</span>(nn)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div></li>
+<li><p><code>param</code>: showing the number of parameters (sum of the
+total number of elements in each weight matrix and bias vector):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">param</span>(nn)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; [1] 101</span></span></code></pre></div></li>
+<li><p><code>inn</code>: the width of the input layer:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">inn</span>(nn)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; [1] 9</span></span></code></pre></div></li>
+<li><p><code>out</code>: the width of the output layer:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">out</span>(nn)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span></code></pre></div></li>
+<li><p><code>hid</code>: the number of hidden layers, always defined to
+be one less than depth:</p></li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">hid</span>(nn)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
+<ul>
+<li><p><code>lay</code>: a list specifying the width of each layer,
+often will be called the <em>layer architecture</em>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>nn <span class="ot">=</span> <span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">lay</span>(nn)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [1] 9 4 5 6</span></span></code></pre></div></li>
+</ul>
+</div>
+<div id="instantiating-neural-networks" class="section level3">
+<h3>Instantiating Neural Networks</h3>
+<p>Instantiation refers to the act of applying an activation function
+between each layer and resulting in a continuous function. Only three
+such activation functions have been implemented ReLU, Sigmoid, and
+Tanh.</p>
+<p>Because the current theoretical frameworks of <span class="citation">Rafi, Padgett, and Nakarmi (2024)</span>, <span class="citation">Jentzen, Kuckuck, and Wurstemberger (2023)</span>,
+<span class="citation">Grohs et al. (2023)</span> only show theoretical
+results for ReLU activation, our Xpn, Sne, and Csn, among others will
+only show approximations under ReLU activations.</p>
+<p>Instantiations must always be accompanied by the appropriate vector
+<span class="math inline">\(x\)</span> of the same length as the input
+layer of the instantiated neural network. See examples:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">6</span>)) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="dv">8</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; [1,] -3.1458857</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [2,] -3.2120874</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; [3,] -0.4812446</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [4,]  0.9645233</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [5,]  0.9013140</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [6,] -5.9451107</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">create_nn</span>(<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; [1,] 0.5321629</span></span></code></pre></div>
+<p>Instantiation will have a special symbol <span class="math inline">\(\mathfrak{I}\)</span>, and instantiation with ReLU
+will be denoted as <span class="math inline">\(\mathfrak{I}_{\mathsf{ReLU}}\)</span>.</p>
+</div>
+<div id="composition" class="section level3">
+<h3>Composition</h3>
+<p>Composition has the wonderful property that it works well with
+instantiation, i.e. instantiation of two composed neural networks are
+the same as the composition of the instantiated continuous functions,
+i.e.</p>
+<p><span class="math display">\[
+\mathfrak{I}_{\mathsf{ReLU}} \left( \nu_1 \bullet \nu_2\right)(x) =
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu_1\right) \circ
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu_1\right)(x)
+\]</span></p>
+<p><strong>Note:</strong> When composing, the output layer width of the
+innermost neural network must match the input layer width of the outer
+neural network.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nu_1</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nu_2</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>nu_2 <span class="sc">|&gt;</span> <span class="fu">comp</span>(nu_1)</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [[1]]$W</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; [1,] -0.9855632</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; [2,] -1.4865799</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [3,] -1.2355514</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; [4,]  0.3341896</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; [5,] -1.2005095</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; [[1]]$b</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; [1,]  0.8807130</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; [2,]  0.2512977</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; [3,] -0.5231943</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt; [4,] -0.2781542</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; [5,] -0.2836871</span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; [[2]]$W</span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]        [,3]        [,4]       [,5]</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt; [1,] -0.3055717  2.1506307 -0.52261280 -1.21737288 -0.6695789</span></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt; [2,] -0.8604663  0.1177763 -0.03084026 -0.45080752 -1.6310799</span></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt; [3,]  2.5922746  0.4008101 -0.82438082 -0.04470601 -0.3125987</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; [4,]  0.5597969 -1.0817910  0.18796867  1.01674722  1.2508699</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; [5,] -0.5599006 -1.5737679 -0.11866320  2.30998627  0.2252668</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt; [6,]  2.4691639 -0.6180974  3.01875898 -0.26827873 -0.9088813</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt; [[2]]$b</span></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt; [1,]  0.7886517</span></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt; [2,] -0.4919067</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt; [3,]  0.4477928</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt; [4,]  0.3254710</span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; [5,] -1.7181613</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt; [6,]  0.1117790</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; [[3]]$W</span></span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a><span class="co">#&gt;           [,1]       [,2]       [,3]       [,4]       [,5]       [,6]</span></span>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; [1,] 0.2234445 -0.5695317  0.3559395  1.1096469 -0.6771058  0.7035657</span></span>
+<span id="cb11-46"><a href="#cb11-46" tabindex="-1"></a><span class="co">#&gt; [2,] 0.1299551  1.5532052 -0.5529983 -0.7975693 -0.0694404  0.3613289</span></span>
+<span id="cb11-47"><a href="#cb11-47" tabindex="-1"></a><span class="co">#&gt; [3,] 0.4779458  0.4065353 -0.8117675 -0.9868587  1.2439006 -0.7472673</span></span>
+<span id="cb11-48"><a href="#cb11-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-49"><a href="#cb11-49" tabindex="-1"></a><span class="co">#&gt; [[3]]$b</span></span>
+<span id="cb11-50"><a href="#cb11-50" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-51"><a href="#cb11-51" tabindex="-1"></a><span class="co">#&gt; [1,] -0.3964576</span></span>
+<span id="cb11-52"><a href="#cb11-52" tabindex="-1"></a><span class="co">#&gt; [2,]  1.7072412</span></span>
+<span id="cb11-53"><a href="#cb11-53" tabindex="-1"></a><span class="co">#&gt; [3,]  0.2984478</span></span>
+<span id="cb11-54"><a href="#cb11-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-55"><a href="#cb11-55" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-56"><a href="#cb11-56" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb11-57"><a href="#cb11-57" tabindex="-1"></a><span class="co">#&gt; [[4]]$W</span></span>
+<span id="cb11-58"><a href="#cb11-58" tabindex="-1"></a><span class="co">#&gt;              [,1]         [,2]       [,3]</span></span>
+<span id="cb11-59"><a href="#cb11-59" tabindex="-1"></a><span class="co">#&gt; [1,] -0.223680372  0.054078315 -1.2147813</span></span>
+<span id="cb11-60"><a href="#cb11-60" tabindex="-1"></a><span class="co">#&gt; [2,] -0.960687459  2.137340614 -1.5871052</span></span>
+<span id="cb11-61"><a href="#cb11-61" tabindex="-1"></a><span class="co">#&gt; [3,]  0.866691218  0.009822721  0.7965998</span></span>
+<span id="cb11-62"><a href="#cb11-62" tabindex="-1"></a><span class="co">#&gt; [4,]  0.005262142 -1.389131151  0.4893646</span></span>
+<span id="cb11-63"><a href="#cb11-63" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-64"><a href="#cb11-64" tabindex="-1"></a><span class="co">#&gt; [[4]]$b</span></span>
+<span id="cb11-65"><a href="#cb11-65" tabindex="-1"></a><span class="co">#&gt;             [,1]</span></span>
+<span id="cb11-66"><a href="#cb11-66" tabindex="-1"></a><span class="co">#&gt; [1,] -0.70987165</span></span>
+<span id="cb11-67"><a href="#cb11-67" tabindex="-1"></a><span class="co">#&gt; [2,]  2.62558875</span></span>
+<span id="cb11-68"><a href="#cb11-68" tabindex="-1"></a><span class="co">#&gt; [3,]  0.09056323</span></span>
+<span id="cb11-69"><a href="#cb11-69" tabindex="-1"></a><span class="co">#&gt; [4,]  0.09895170</span></span>
+<span id="cb11-70"><a href="#cb11-70" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-71"><a href="#cb11-71" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-72"><a href="#cb11-72" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb11-73"><a href="#cb11-73" tabindex="-1"></a><span class="co">#&gt; [[5]]$W</span></span>
+<span id="cb11-74"><a href="#cb11-74" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]        [,3]       [,4]</span></span>
+<span id="cb11-75"><a href="#cb11-75" tabindex="-1"></a><span class="co">#&gt; [1,] -1.4643334 -0.6582374 -1.22302520  0.2992340</span></span>
+<span id="cb11-76"><a href="#cb11-76" tabindex="-1"></a><span class="co">#&gt; [2,] -1.3282413  0.2351269 -1.26016591  0.1575979</span></span>
+<span id="cb11-77"><a href="#cb11-77" tabindex="-1"></a><span class="co">#&gt; [3,] -0.7227838 -1.0478097  0.72466098 -1.4400574</span></span>
+<span id="cb11-78"><a href="#cb11-78" tabindex="-1"></a><span class="co">#&gt; [4,] -0.5859589 -1.2292912  0.06233431 -1.6657332</span></span>
+<span id="cb11-79"><a href="#cb11-79" tabindex="-1"></a><span class="co">#&gt; [5,] -1.0163430 -0.7884800  0.26128646 -1.1905279</span></span>
+<span id="cb11-80"><a href="#cb11-80" tabindex="-1"></a><span class="co">#&gt; [6,]  0.1819553 -0.1200919 -1.20793087  0.9774257</span></span>
+<span id="cb11-81"><a href="#cb11-81" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-82"><a href="#cb11-82" tabindex="-1"></a><span class="co">#&gt; [[5]]$b</span></span>
+<span id="cb11-83"><a href="#cb11-83" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-84"><a href="#cb11-84" tabindex="-1"></a><span class="co">#&gt; [1,] -0.7454942</span></span>
+<span id="cb11-85"><a href="#cb11-85" tabindex="-1"></a><span class="co">#&gt; [2,]  1.2403936</span></span>
+<span id="cb11-86"><a href="#cb11-86" tabindex="-1"></a><span class="co">#&gt; [3,]  1.6089310</span></span>
+<span id="cb11-87"><a href="#cb11-87" tabindex="-1"></a><span class="co">#&gt; [4,] -0.2729380</span></span>
+<span id="cb11-88"><a href="#cb11-88" tabindex="-1"></a><span class="co">#&gt; [5,]  1.0807913</span></span>
+<span id="cb11-89"><a href="#cb11-89" tabindex="-1"></a><span class="co">#&gt; [6,]  0.4677815</span></span>
+<span id="cb11-90"><a href="#cb11-90" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-91"><a href="#cb11-91" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-92"><a href="#cb11-92" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb11-93"><a href="#cb11-93" tabindex="-1"></a><span class="co">#&gt; [[6]]$W</span></span>
+<span id="cb11-94"><a href="#cb11-94" tabindex="-1"></a><span class="co">#&gt;            [,1]      [,2]        [,3]       [,4]        [,5]       [,6]</span></span>
+<span id="cb11-95"><a href="#cb11-95" tabindex="-1"></a><span class="co">#&gt; [1,]  0.6103693  1.996691  0.68532043  2.1172797 -0.02596058 -0.9844214</span></span>
+<span id="cb11-96"><a href="#cb11-96" tabindex="-1"></a><span class="co">#&gt; [2,]  0.7507909 -1.030310 -0.07362092 -1.0993368 -1.51604744 -0.6425123</span></span>
+<span id="cb11-97"><a href="#cb11-97" tabindex="-1"></a><span class="co">#&gt; [3,] -1.1709994  2.162050  0.20287539 -0.2184209  0.29909535  1.2748073</span></span>
+<span id="cb11-98"><a href="#cb11-98" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-99"><a href="#cb11-99" tabindex="-1"></a><span class="co">#&gt; [[6]]$b</span></span>
+<span id="cb11-100"><a href="#cb11-100" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-101"><a href="#cb11-101" tabindex="-1"></a><span class="co">#&gt; [1,]  0.1430509</span></span>
+<span id="cb11-102"><a href="#cb11-102" tabindex="-1"></a><span class="co">#&gt; [2,]  0.9202284</span></span>
+<span id="cb11-103"><a href="#cb11-103" tabindex="-1"></a><span class="co">#&gt; [3,] -1.0168783</span></span>
+<span id="cb11-104"><a href="#cb11-104" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-105"><a href="#cb11-105" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-106"><a href="#cb11-106" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb11-107"><a href="#cb11-107" tabindex="-1"></a><span class="co">#&gt; [[7]]$W</span></span>
+<span id="cb11-108"><a href="#cb11-108" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]      [,3]</span></span>
+<span id="cb11-109"><a href="#cb11-109" tabindex="-1"></a><span class="co">#&gt; [1,] -0.5965176 -0.8644789 -1.586006</span></span>
+<span id="cb11-110"><a href="#cb11-110" tabindex="-1"></a><span class="co">#&gt; [2,]  0.2476866  1.2156654 -2.022209</span></span>
+<span id="cb11-111"><a href="#cb11-111" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-112"><a href="#cb11-112" tabindex="-1"></a><span class="co">#&gt; [[7]]$b</span></span>
+<span id="cb11-113"><a href="#cb11-113" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-114"><a href="#cb11-114" tabindex="-1"></a><span class="co">#&gt; [1,]  0.2531036</span></span>
+<span id="cb11-115"><a href="#cb11-115" tabindex="-1"></a><span class="co">#&gt; [2,] -1.5226577</span></span></code></pre></div>
+</div>
+<div id="scalar-multiplication" class="section level3">
+<h3>Scalar Multiplication</h3>
+<p>Given a neural network you may perform scalar left multiplication on
+a neural network. They instantiate in quite nice ways. Suppose if the
+neural network instantiated as <span class="math inline">\(\mathfrak{I}_{\mathsf{ReLU}}\left( \nu
+\right)(x)\)</span>, scalar left multiplication instantiates as:</p>
+<p><span class="math display">\[
+\mathfrak{I}_{\mathsf{ReLU}} \left( \lambda \triangleright \nu\right)(x)
+= \lambda \cdot \mathfrak{I}_{\mathsf{ReLU}}\left( \nu\right)(x)
+\]</span></p>
+<p>Scalar left multiplication instantiates as:</p>
+<p><span class="math display">\[
+\mathfrak{I}_{\mathsf{ReLU}} \left(\nu\triangleleft \lambda\right)(x) =
+\mathfrak{I}_{\mathsf{ReLU}}\left(\nu\right)(\lambda \cdot x)
+\]</span></p>
+<p>Here is the R code for this, compare the two outputs:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">8</span>,<span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nn</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>nn <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">5</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; [1,] 2.057269</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="dv">2</span> <span class="sc">|&gt;</span> <span class="fu">slm</span>(nn) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="dv">5</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt; [1,] 4.114537</span></span></code></pre></div>
+<p>And now for scalar right multiplication, although the difference in
+output is not as obvious:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">8</span>,<span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nn</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>nn <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="dv">5</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; [1,] -2.801027</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>nn <span class="sc">|&gt;</span> <span class="fu">srm</span>(<span class="dv">5</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">5</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [1,] -17.58664</span></span></code></pre></div>
+</div>
+<div id="stacking-neural-networks" class="section level3">
+<h3>Stacking Neural Networks</h3>
+<p>Neural networks may also be stacked on top each other. The
+instantiation of two stacked neural networks is the concatenation of the
+outputs of the instantiated networks individually. In other words,
+mathematically we may say that:</p>
+<p><span class="math display">\[
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu_1 \boxminus \nu_2\right)\left(
+\left[x \quad y\right]^\intercal\right) = \left[
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu_1\right) \left( x\right)\quad
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu_2\right)\left(
+y\right)\right]^\intercal
+\]</span></p>
+<p>To make this more concrete observe that:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nn_1</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">5</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nn_2</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>(nn_1 <span class="sc">|&gt;</span> <span class="fu">stk</span>(nn_2)) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">6</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt;              [,1]</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt;  [1,]  -0.9189996</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;  [2,]   0.1653912</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt;  [3,]   1.6666090</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt;  [4,]   0.8108034</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;  [5,]  13.9844870</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt;  [6,]  18.8487898</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt;  [7,] -27.2170482</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt;  [8,]  16.9969090</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt;  [9,]  35.7216422</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare to:&quot;</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare to:&quot;</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>nn_1 <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt; [1,] -0.9189996</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co">#&gt; [2,]  0.1653912</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co">#&gt; [3,]  1.6666090</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="co">#&gt; [4,]  0.8108034</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>nn_2 <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>))</span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co">#&gt; [1,]  13.98449</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co">#&gt; [2,]  18.84879</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co">#&gt; [3,] -27.21705</span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="co">#&gt; [4,]  16.99691</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a><span class="co">#&gt; [5,]  35.72164</span></span></code></pre></div>
+<p><strong>Note</strong> Stacking of unequal depth happens automatically
+by something called “tunneling”.</p>
+</div>
+<div id="neural-network-sums" class="section level3">
+<h3>Neural Network Sums</h3>
+<p>Neural networks may be added such that the continuous function
+created under ReLU instantiation is the sum of the individual
+instantiated functions, i.e.</p>
+<p><span class="math display">\[
+\mathfrak{I}_{\mathsf{ReLU}}\left( \nu \oplus \mu\right)\left( x\right)
+= \mathfrak{I}_{\mathsf{ReLU}}\left( \nu \right)(x) +
+\mathfrak{I}_{\mathsf{ReLU}}\left(\mu\right)\left( x\right)
+\]</span></p>
+<p>The code works as follows:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> nu</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">create_nn</span>() <span class="ot">-&gt;</span> mu</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>nu <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">4</span>) <span class="ot">-&gt;</span> x_1</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>mu <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">4</span>) <span class="ot">-&gt;</span> x_2</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>x_1 <span class="sc">+</span> x_2 <span class="ot">-&gt;</span> result_1</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;The sum of the instantiated neural network is:&quot;</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The sum of the instantiated neural network is:&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="fu">print</span>(result_1)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt; [1,] 29.01021</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>(nu <span class="sc">|&gt;</span> <span class="fu">nn_sum</span>(mu)) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">4</span>) <span class="ot">-&gt;</span> result_2</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;The instation of their neural network sums&quot;</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The instation of their neural network sums&quot;</span></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="fu">print</span>(result_2)</span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co">#&gt; [1,] 29.01021</span></span></code></pre></div>
+</div>
+<div id="neural-networks-for-squaring-and-products" class="section level3">
+<h3>Neural Networks for Squaring and Products</h3>
+<p>Now that we have a basic operations for neural networks, we are able
+to go into more sophisticated functions. We start with some basic</p>
+<div id="the-mathsfsqrqvarepsilon-neural-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Sqr}^{q,\varepsilon}\)</span> Neural
+Networks</h5>
+<p>We have neural networks for approximating squaring any real number.
+These only work with ReLU instantiates and most results in this field as
+well as most of the literature focuses on ReLU.</p>
+<p>These must be supplied with two arguments, <span class="math inline">\(q\in (2,\infty)\)</span> and <span class="math inline">\(\varepsilon \in (0,\infty)\)</span>. Accuracy
+increases the closer we are the <span class="math inline">\(2\)</span>
+and <span class="math inline">\(\varepsilon\)</span> respectively.</p>
+<p>See the examples:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">Sqr</span>(<span class="fl">2.1</span>,<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU,<span class="dv">5</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; [1,] 25.08196</span></span></code></pre></div>
+</div>
+<div id="the-mathsfprdqvarepsilon-neural-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Prd}^{q,\varepsilon}\)</span> Neural
+Networks</h5>
+<p>Similarly we may define the product neural network which approximates
+the product of two real numbers, given <span class="math inline">\(q \in
+(2,\infty)\)</span>, and <span class="math inline">\(\varepsilon \in
+(0,\infty)\)</span>. Accuracy increases the closer we are to <span class="math inline">\(2\)</span> and <span class="math inline">\(\varepsilon\)</span> respectively. These must be
+instantiated with a list of two real numbers:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">Prd</span>(<span class="fl">2.1</span>,<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co">#&gt; [1,] 5.977258</span></span></code></pre></div>
+</div>
+</div>
+<div id="neural-network-for-raising-to-a-power" class="section level3">
+<h3>Neural Network for Raising to a Power</h3>
+<p>Repeated applications of the <span class="math inline">\(\mathsf{Prd}^{q,\varepsilon}\)</span>. Will give
+us neural networks for approximating raising to a power.</p>
+<p>These are called using the <span class="math inline">\(\mathsf{Pwr}^{q,\varepsilon}\)</span> neural
+networks. These need three arguments <span class="math inline">\(q\in
+(2,\infty)\)</span>, <span class="math inline">\(\varepsilon \in
+(0,\infty)\)</span>, and <span class="math inline">\(n \in
+\mathbb{N}\)</span>, the power to which we are approximating. This may
+require significant computation time, depending on the power to which we
+are approximating. Here is an example:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">Pwr</span>(<span class="fl">2.1</span>, <span class="fl">0.1</span>,<span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="dv">2</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co">#&gt; [1,] 7.606474</span></span></code></pre></div>
+</div>
+<div id="neural-network-exponentials-sines-and-cosines" class="section level3">
+<h3>Neural Network Exponentials, Sines, and Cosines</h3>
+<p>We can do neural network sums, scalar left multiplication, and
+raising to a power. We thus have enough technology to create neural
+network polynomials, and more specifically finite power series
+approximations of common functions.</p>
+<div id="the-mathsfxpn_nqvarepsilon-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Xpn}_n^{q,\varepsilon}\)</span>
+Networks</h5>
+<p>This is the neural network for approximating <span class="math inline">\(e^x\)</span>. These need three arguments <span class="math inline">\(q\in (2,\infty)\)</span>, <span class="math inline">\(\varepsilon \in (0,\infty)\)</span>, and <span class="math inline">\(n \in \mathbb{N}\)</span>, the power to which we
+will truncate the power series expansion. This may require significant
+computation time, depending on the power to which we are approximating.
+Here is an example of the code</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">Xpn</span>(<span class="dv">5</span>,<span class="fl">2.1</span>,<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="dv">2</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 1</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 2</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 3</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 4</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 5</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="co">#&gt; [1,] 7.021291</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare to:&quot;</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare to:&quot;</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="fu">exp</span>(<span class="dv">2</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a><span class="co">#&gt; [1] 7.389056</span></span></code></pre></div>
+<p>By far the biggest improvement in accuracy will come from increasing
+the power series truncation limit. This will also contribute the most to
+computation time.</p>
+<p>The length of computation time presents a challenge at this point.
+Steps have been taken to vectorize the code as much as possible but
+future work may need to be done in the direction of reimplementing this
+using Rcpp.</p>
+</div>
+<div id="the-mathsfcsn_nqvarepsilon-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Csn}_n^{q,\varepsilon}\)</span>
+Networks</h5>
+<p>This is the neural network for approximating <span class="math inline">\(\cos(x)\)</span>. These need three arguments <span class="math inline">\(q\in (2,\infty)\)</span>, <span class="math inline">\(\varepsilon \in (0,\infty)\)</span>, and <span class="math inline">\(n \in \mathbb{N}\)</span>, the power to which we
+will truncate the power series expansion. This may require significant
+computation time, depending on the power to which we are approximating.
+Here is an example of the code</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">Csn</span>(<span class="dv">3</span>,<span class="fl">2.1</span>,<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fl">0.4</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 2</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 4</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 6</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co">#&gt; [1,] 0.9452746</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare to:&quot;</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare to:&quot;</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="fu">cos</span>(<span class="fl">0.4</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt; [1] 0.921061</span></span></code></pre></div>
+<p>By far the biggest improvement in accuracy will come from increasing
+the power series truncation limit. This will also contribute the most to
+computation time.</p>
+<p>The length of computation time presents a challenge at this point.
+Steps have been taken to vectorize the code as much as possible but
+future work may need to be done in the direction of reimplementing this
+using Rcpp.</p>
+</div>
+<div id="the-mathsfsne_nqvarepsilon-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Sne}_n^{q,\varepsilon}\)</span>
+Networks</h5>
+<p>This is the neural network for approximating <span class="math inline">\(\sin(x)\)</span>. These need three arguments <span class="math inline">\(q\in (2,\infty)\)</span>, <span class="math inline">\(\varepsilon \in (0,\infty)\)</span>, and <span class="math inline">\(n \in \mathbb{N}\)</span>, the power to which we
+will truncate the power series expansion. This may require significant
+computation time, depending on the power to which we are approximating.
+Here is an example of the code</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">Sne</span>(<span class="dv">3</span>,<span class="fl">2.1</span>,<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fl">0.4</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 2</span></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 4</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#&gt; Power series approximation added for power: 6</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#&gt; [1,] 0.3887839</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare to:&quot;</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare to:&quot;</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="fu">sin</span>(<span class="fl">0.4</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#&gt; [1] 0.3894183</span></span></code></pre></div>
+<p>By far the biggest improvement in accuracy will come from increasing
+the power series truncation limit. This will also contribute the most to
+computation time.</p>
+<p>The length of computation time presents a challenge at this point.
+Steps have been taken to vectorize the code as much as possible but
+future work may need to be done in the direction of reimplementing this
+using Rcpp.</p>
+</div>
+<div id="the-mathsftrph-and-mathsfetrnh-networks" class="section level5">
+<h5>The <span class="math inline">\(\mathsf{Trp}^h\)</span> and <span class="math inline">\(\mathsf{Etr}^{N,h}\)</span> Networks</h5>
+<p>A simple trapezoidal approximation can be done with neural networks
+given two sample points along the two legs of a trapezoid. These may be
+instantiated with any of the three activation functions implemented,
+ReLU, Sigmoid, or Tanh Observe:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>h <span class="ot">=</span> <span class="fl">0.2</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>mesh <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span><span class="sc">+</span>h)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>samples <span class="ot">=</span> <span class="fu">sin</span>(mesh)</span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="fu">Trp</span>(<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, samples)</span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="co">#&gt;             [,1]</span></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="co">#&gt; [1,] 0.009933467</span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="fu">Trp</span>(<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(Sigmoid, samples)</span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="co">#&gt;             [,1]</span></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="co">#&gt; [1,] 0.009933467</span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="fu">Trp</span>(<span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(Tanh, samples)</span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#&gt;             [,1]</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="co">#&gt; [1,] 0.009933467</span></span></code></pre></div>
+<p>Now we may extend this to give use what we call the “extended
+trapezoid”, which will approximate the area under a curve <span class="math inline">\(f(x)\)</span> using the trapezoidal rule once
+instantiated with function sample values from all of the mesh. These
+require two parameters <span class="math inline">\(N \in
+\mathbb{N}\)</span>, representing the number of trapezoids that we want
+to split the area under <span class="math inline">\(f(x)\)</span> into,
+and <span class="math inline">\(h\)</span> the mesh width. Note we will
+always have one less trapezoid than the number of meshpoints.</p>
+<p>These may be instantiated with any of the three activation functions
+implemented, ReLU, Sigmoid, or Tanh.</p>
+<p>Obseve:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>,pi, <span class="at">length.out =</span> <span class="dv">1000</span>) <span class="ot">-&gt;</span> x</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="fu">sin</span>(x) <span class="ot">-&gt;</span> samples</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="fu">Etr</span>(<span class="dv">1000-1</span>,pi<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, samples)</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="co">#&gt;          [,1]</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="co">#&gt; [1,] 1.997998</span></span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare with:&quot;</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare with:&quot;</span></span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>sin <span class="sc">|&gt;</span> <span class="fu">integrate</span>(<span class="dv">0</span>,pi)</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a><span class="co">#&gt; 2 with absolute error &lt; 2.2e-14</span></span></code></pre></div>
+</div>
+</div>
+<div id="maximum-convolution-approximations" class="section level3">
+<h3>Maximum Convolution Approximations</h3>
+<p>Suppose you have a function <span class="math inline">\(f(x):[a,b]
+\rightarrow \mathbb{R}\)</span>, with a Lipschitz constant <span class="math inline">\(L\)</span>. A global Lipschitz constant is not
+necessary <span class="math inline">\(L\)</span> could be the maximum
+upper bound of the absolute value of the slope of the function over
+<span class="math inline">\([a,b]\)</span></p>
+<p>Take sample points <span class="math inline">\(\{x_1,x_2,...,x_n\}\)</span> within the domain.
+Then let <span class="math inline">\(f_1,f_2,...,f_n\)</span> be a
+family of functions, define for all <span class="math inline">\(i \in
+\{1,2,...,n\}\)</span> as: <span class="math display">\[
+f_i(x) = f(x_i) - L|x-x_i|_1
+\]</span></p>
+<p>These would create little “hills” with the tip of the hill being at
+whatever points on the function where the samples were take from. We may
+“saw off” the base of these hills giving us a sawtooth-like function
+that approximates our function <span class="math inline">\(f(x)\)</span>, i.e.</p>
+<p><span class="math display">\[
+\hat{f} (x) = \max_{i \in \{1,2,...,n\}} \left\{ f_i \left(
+x\right)\right\}
+\]</span></p>
+<p>We will call this the “maximum convolution approximation”. These must
+be instantiated with ReLU for maximum accuracy.</p>
+<p>These are implemented in this package as follows:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">seq</span>(<span class="fl">0.01</span>,<span class="dv">5</span>,<span class="at">length.out =</span> <span class="dv">500</span>) <span class="ot">-&gt;</span> x </span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">sin</span>(x) <span class="sc">+</span> <span class="fu">log10</span>(x) <span class="ot">-&gt;</span> y</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="dv">1</span> <span class="ot">-&gt;</span> L</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="fu">MC</span>(x,y,L) <span class="sc">|&gt;</span> <span class="fu">inst</span>(ReLU, <span class="fl">2.5</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a><span class="co">#&gt; X was automatically turned into a row vector.</span></span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a><span class="co">#&gt; y was automatically turned into a column vector.</span></span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a><span class="co">#&gt;           [,1]</span></span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="co">#&gt; [1,] 0.9964122</span></span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Compare to:&quot;</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Compare to:&quot;</span></span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a><span class="fu">sin</span>(<span class="fl">2.5</span>)<span class="sc">+</span><span class="fu">log10</span>(<span class="fl">2.5</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a><span class="co">#&gt; [1] 0.9964122</span></span></code></pre></div>
+</div>
+<div id="references" class="section level3 unnumbered">
+<h3 class="unnumbered">References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-grohs2019spacetime" class="csl-entry">
+Grohs, Philipp, Fabian Hornung, Arnulf Jentzen, and Philipp Zimmermann.
+2023. <span>“Space-Time Error Estimates for Deep Neural Network
+Approximations for Differential Equations.”</span> <em>Advances in
+Computational Mathematics</em> 49 (1): 4. <a href="https://doi.org/10.1007/s10444-022-09970-2">https://doi.org/10.1007/s10444-022-09970-2</a>.
+</div>
+<div id="ref-Grohs_2022" class="csl-entry">
+Grohs, Philipp, Arnulf Jentzen, and Diyora Salimova. 2022. <span>“Deep
+Neural Network Approximations for Solutions of <span>PDEs</span> Based
+on Monte Carlo Algorithms.”</span> <em>Partial Differential Equations
+and Applications</em> 3 (4). <a href="https://doi.org/10.1007/s42985-021-00100-z">https://doi.org/10.1007/s42985-021-00100-z</a>.
+</div>
+<div id="ref-bigbook" class="csl-entry">
+Jentzen, Arnulf, Benno Kuckuck, and Philippe von Wurstemberger. 2023.
+<span>“Mathematical Introduction to Deep Learning: Methods,
+Implementations, and Theory.”</span> <a href="https://arxiv.org/abs/2310.20360">https://arxiv.org/abs/2310.20360</a>.
+</div>
+<div id="ref-petersen_optimal_2018" class="csl-entry">
+Petersen, Philipp, and Felix Voigtlaender. 2018. <span>“Optimal
+Approximation of Piecewise Smooth Functions Using Deep <span>ReLU</span>
+Neural Networks.”</span> <em>Neural Netw</em> 108 (December): 296–330.
+<a href="https://doi.org/10.1016/j.neunet.2018.08.019">https://doi.org/10.1016/j.neunet.2018.08.019</a>.
+</div>
+<div id="ref-rafi_towards_2024" class="csl-entry">
+Rafi, Shakil, Joshua Lee Padgett, and Ukash Nakarmi. 2024.
+<span>“Towards an <span>Algebraic</span> <span>Framework</span>
+<span>For</span> <span>Approximating</span> <span>Functions</span>
+<span>Using</span> <span>Neural</span> <span>Network</span>
+<span>Polynomials</span>.”</span> <em>arXiv.org</em>. <a href="https://arxiv.org/abs/2402.01058v1">https://arxiv.org/abs/2402.01058v1</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
